@@ -6,6 +6,18 @@ h1{
   color: #32d0e9;
   margin-top: 50px;
 }
+
+h4{
+  color: #32d0e9;
+  margin-top: 20px;
+}
+
+h5{
+  color: #c3f0f7;
+  margin: 5px 0 0 0 ;
+  padding: 0px;
+}
+
 p{
   color: #ffffff
 }
@@ -25,4 +37,8 @@ p{
 
 .logo{
   width: 200px;
+}
+
+.car-image{
+  width: 100%;
 }
