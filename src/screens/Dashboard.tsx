@@ -1,47 +1,53 @@
-import React, {useEffect, useState} from 'react'
-import {auth,database} from '../utilis/firebaseConfig'
-import {useNavigate} from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { auth, database } from "../utilis/firebaseConfig";
+import { useNavigate } from "react-router-dom";
 import {
   collection,
   query,
   where,
   getDoc,
   getDocs,
-  doc
-} from 'firebase/firestore'
-
+  doc,
+} from "firebase/firestore";
+import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
-
   const navigate = useNavigate();
-  const logout = async() => {
+  const logout = async () => {
     auth.signOut();
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   useEffect(() => {
-    loadAccount()
-  },[])
+    loadAccount();
+  }, []);
 
-  const loadAccount = async() => {
+  const loadAccount = async () => {
     const accountsRef = collection(database, "accounts");
     const q = query(accountsRef, where("uid", "==", auth.currentUser?.uid));
     const qSnapShot = await getDocs(q);
     const array = qSnapShot.docs.map((doc) => ({
       id: doc.id,
-      ...doc.data()
-    }))
+      ...doc.data(),
+    }));
     console.log(JSON.stringify(array[0]));
-    
-  }
-
+  };
 
   return (
     <>
-      <p>{auth.currentUser?.email}</p>
-      <button onClick={logout} className='btn btn-danger btn-lg'>Logout</button>
-    </>
-  )
-}
 
-export default Dashboard
+
+
+
+
+      <Navbar />
+
+
+      <button onClick={logout} className="btn btn-danger btn-lg">
+        Logout
+      </button>
+    </>
+  );
+};
+
+export default Dashboard;
