@@ -42,10 +42,6 @@ const Dashboard = () => {
   const [minValue, setMinValue] = useState(selectedCar ? (selectedCar.carPrice * 10) / 100 : 0);
   const [maxValue, setMaxValue] = useState(selectedCar? selectedCar.carPrice : 0);
 
-
-
-
-
   const navigate = useNavigate();
   const logout = async () => {
     auth.signOut();
@@ -67,8 +63,6 @@ const Dashboard = () => {
     }));
     console.log(JSON.stringify(array[0]));
   };
-
-
   const loadCars = () => {
     setIsLoading(true)
     getDocs(collection(database, "cars"))
@@ -84,9 +78,6 @@ const Dashboard = () => {
       toast.error(error.message)
     })
   }
-
- 
-
   const addNewCar = () => {
     setIsLoading(true);
     if (carModel !== "" && carPrice !== "" && carImage !== "") {
@@ -134,12 +125,17 @@ const Dashboard = () => {
       setIsLoading(false);
     }
   };
-
-
   function formatNumber(number) {
     return new Intl.NumberFormat("en-US").format(number);
   }
 
+  useEffect(() => {
+    if(selectedCar){
+      setMinValue((selectedCar.carPrice * 10) / 100);
+      setMaxValue(selectedCar.carPrice)
+      setSelectedValue((selectedCar.carPrice * 10) / 100)
+    }
+  },[selectedCar])
 
 
   return (
@@ -194,6 +190,8 @@ const Dashboard = () => {
           <div className="col-lg-3">
             <h4>Lease Calculator</h4><br/>
 
+
+
             <p style={{color:'#ffffff'}}>Select first payment</p>
             <input 
               value={selectedValue}
@@ -201,33 +199,40 @@ const Dashboard = () => {
               max={maxValue}
               onChange={(e) => {setSelectedValue(e.target.value)}}
               type="range" 
+              step={1000}
               className="form-range" 
              />
-             <h5>${selectedValue}</h5><br/>
+             <h5>${formatNumber(selectedValue)}</h5><br/>
+
+
+
+
 
              <p style={{color:'#ffffff'}}>Select number of months</p>
 
-             <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
 
+             <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
               {
-                months.map((month, idx) => (
+                months.map((month) => (
                   <>
+                  <label className="btn btn-outline-info">
+
                   <input 
-                    key={idx}
-                    id={`month-${idx}`}
                     onChange={(e) => setSelectedMonths(e.currentTarget.value)} 
                     type="radio" className="btn-check" 
                     value={month.value}
                     checked={selectedMonths === month.value}
-                    name="month" />
-                  <label className="btn btn-outline-primary">{month.name}</label>
+                    name="month" />{month.name}</label>
                   </>
                 ))
               }
-              <div style={{width:'100%', marginTop:12}}>
-              <h5>{selectedMonths}</h5></div>
-
             </div>
+
+            <h1>
+              $ {formatNumber(((maxValue - selectedValue) / selectedMonths).toFixed())}
+            </h1>
+
+            <div style={{width:'100%', marginTop:12}}><h5>{selectedMonths} Months</h5></div>
 
           </div>
         </div>
